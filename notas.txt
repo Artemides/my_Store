@@ -1,0 +1,3 @@
+#.gitignore.io
+manejor de errores con @hapi/boom
+validación de formularios con joi
