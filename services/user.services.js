@@ -1,9 +1,16 @@
 const {faker}=require("@faker-js/faker");
 const boom=require("@hapi/boom");
+
+const pool=require('../libs/postgres.pool');
+
+
+
+
 class userService{
   constructor(){
     this.users=[];
     this.generateUsers();
+    this.pool=pool.on('error',(err)=> console.error(err));
   }
   generateUsers(){
     for (let index = 0; index < 10; index++) {
@@ -20,10 +27,10 @@ class userService{
     }
   }
   find(){
-    return new Promise((resolve,reject)=>{
-      setTimeout(() => {
-          resolve(this.users)
-      }, 300);
+    return new Promise( async (resolve,reject)=>{
+      const query= 'SELECT * FROM tasks';
+      const result=await this.pool.query(query);
+      resolve(result.rows);
     })
   }
   create(data){
