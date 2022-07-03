@@ -3,7 +3,7 @@ const boom=require("@hapi/boom");
 
 const pool=require('../libs/postgres.pool');
 
-
+const {models}= require('../libs/sequelize');
 
 
 class userService{
@@ -28,18 +28,16 @@ class userService{
   }
   find(){
     return new Promise( async (resolve,reject)=>{
-      const query= 'SELECT * FROM tasks';
-      const result=await this.pool.query(query);
-      resolve(result.rows);
+      const result=models.User.findAll({
+        include:['user_customer']
+      });
+      resolve(result);
     })
   }
   create(data){
-    return new Promise((resolve,reject)=>{
-      data.id=faker.datatype.uuid();
-      this.users.push({
-        ...data
-      });
-      resolve(data);
+    return new Promise(async (resolve,reject)=>{
+        const result= await models.User.create(data).catch(err=>reject(err)); 
+        resolve(result);
     })
   }
   patch(id,data){

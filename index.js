@@ -1,7 +1,7 @@
 const express = require('express');
 const routerApp = require('./routes')
 const cors=require('cors');
-const { logError, handleError, boomErrorHandler } = require('./middlewares/error.handler');
+const { logError, handleError, boomErrorHandler,ormErrorHandler,ormDatabaseErrorHandler} = require('./middlewares/error.handler');
 
 
 const app = express();
@@ -23,8 +23,11 @@ app.use(cors(options));
 routerApp(app);
 app.use(logError);
 app.use(boomErrorHandler);
-app.use(handleError)
+app.use(ormErrorHandler);
+app.use(ormDatabaseErrorHandler);
+app.use(handleError);
 app.listen(port, () => {
   console.log(`Listenning on Port ${port}`)
 })
+
 

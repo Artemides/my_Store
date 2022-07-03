@@ -1,3 +1,14 @@
 #.gitignore.io
 manejor de errores con @hapi/boom
 validación de formularios con joi
+manejador de variables de entorno
+    npm i dotenv
+
+ORM 
+    sequelize   
+    npm i --save sequelize
+    npm i pg pg-hstore
+    
+    FOR PRODUCTION PURPOSE
+        sequelize-cli --save-dev
+
