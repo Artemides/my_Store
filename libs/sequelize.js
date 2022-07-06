@@ -4,13 +4,10 @@ const setupModels =require('../db/models')
 
 const options= {
   dialect: 'postgres',
-  logging: config.isProd ? false:true,
+  logging: config.isProd ? false:false,
 }
 if(config.isProd) options.dialectOptions={ssl: {rejectUnauthorized:false}}
-const sequelize = new Sequelize(config.dbUrl, {
-  dialect: 'postgres',
-  logging: false,
-});
+const sequelize = new Sequelize(config.dbUrl,options);
 
 setupModels(sequelize);
 
