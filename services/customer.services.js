@@ -2,7 +2,7 @@ const {models}=require('../libs/sequelize');
 
 class CustomerService {
     constructor(){
-
+        
     }
     create(data){
         return new Promise(async(resolve,reject)=>{
@@ -20,6 +20,7 @@ class CustomerService {
             resolve(response);
         })
     }
+    
 }
 module.exports=CustomerService;
 

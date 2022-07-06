@@ -10,6 +10,14 @@ const image=Joi.string().uri();
 const isBlocked=Joi.bool();
 const categoryId=Joi.number().integer();
 
+// LIMIT PARAMS
+const limit=Joi.number().integer().min(1).max(100);
+const offset=Joi.number().integer().min(0);
+const byPrice=Joi.number().integer().min(0.1);
+const min_price=Joi.number().integer().min(0.1);
+const max_price=Joi.number().integer().min(0.1).greater(Joi.ref('min_price'));
+
+
 const createProductSchema = Joi.object({
   name: name.required(),
   description: description.required(),
@@ -30,5 +38,20 @@ const updateProductSchema = Joi.object({
 const getProductSchema = Joi.object({
   id: id.required()
 })
+const filterSchema = Joi.object({
+  limit,
+  offset,
+  byPrice,
+  min_price,
+  max_price: max_price.when('min_price', {
+    is: Joi.number().integer(),
+    then: Joi.required(),
 
-module.exports = { createProductSchema, updateProductSchema, getProductSchema }
+  })
+})
+module.exports = { 
+  createProductSchema, 
+  updateProductSchema, 
+  getProductSchema,
+  filterSchema
+}

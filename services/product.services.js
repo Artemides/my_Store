@@ -1,7 +1,7 @@
 const { faker } = require('@faker-js/faker');
 const boom = require('@hapi/boom');
 const { models } = require('../libs/sequelize');
-
+const { Op}=require('sequelize');
 class ProductService {
   constructor() {
     this.products = [];
@@ -27,9 +27,26 @@ class ProductService {
       resolve(response);
     });
   }
-  find() {
+  find(query) {
     return new Promise((resolve, reject) => {
-      const response = models.Product.findAll();
+      const { limit, offset,byPrice,min_price,max_price} = query;
+      const options={
+        include:['category'],
+        where:{}
+      }
+      if(limit && offset){
+        options.limit=limit;
+        options.offset=offset;
+      }
+      if(byPrice){
+        options.where.price=byPrice;
+      }
+      if(min_price && max_price){
+        options.where.price={
+            [Op.between]:[min_price,max_price]
+        }
+      }
+      const response = models.Product.findAll(options);
       resolve(response);
     });
   }
@@ -40,9 +57,6 @@ class ProductService {
       });
       if (!product) {
         reject('Product not found');
-      }
-      if (product.isBlocked) {
-        reject(boom.conflict('Product Blocked'));
       }
       resolve(product);
     });
