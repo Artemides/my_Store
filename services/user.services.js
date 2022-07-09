@@ -1,6 +1,7 @@
 const {faker}=require("@faker-js/faker");
 const boom=require("@hapi/boom");
 const {models}= require('../libs/sequelize');
+const {hash}=require('bcrypt')
 class userService{
   constructor(){
     this.users=[];
@@ -22,15 +23,26 @@ class userService{
   }
   find(){
     return new Promise( async (resolve,reject)=>{
-      const result=models.User.findAll({
+      const result=await models.User.findAll({
         include:['user_customer']
       });
       resolve(result);
     })
   }
+  async findByEmail(email){
+     const user=await models.User.findOne({
+      where:{email}
+     });
+     return user;
+  }
   create(data){
     return new Promise(async (resolve,reject)=>{
-        const result= await models.User.create(data).catch(err=>reject(err)); 
+        
+        const result= await models.User.create({
+          ...data,
+          password: await hash(data.password,10)
+        }).catch(err=>reject(err)); 
+        delete result.dataValues.password;
         resolve(result);
     })
   }

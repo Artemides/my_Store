@@ -15,7 +15,7 @@ const limit=Joi.number().integer().min(1).max(100);
 const offset=Joi.number().integer().min(0);
 const byPrice=Joi.number().integer().min(0.1);
 const min_price=Joi.number().integer().min(0.1);
-const max_price=Joi.number().integer().min(0.1).greater(Joi.ref('min_price'));
+const max_price=Joi.number().integer().min(0.1);
 
 
 const createProductSchema = Joi.object({
@@ -44,10 +44,10 @@ const filterSchema = Joi.object({
   byPrice,
   min_price,
   max_price: max_price.when('min_price', {
-    is: Joi.number().integer(),
+    is: Joi.number().integer().exist(),
     then: Joi.required(),
 
-  })
+  }).greater(Joi.ref('min_price')),
 })
 module.exports = { 
   createProductSchema, 

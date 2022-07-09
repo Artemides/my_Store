@@ -19,7 +19,8 @@ const createCustomerSchema=Joi.object({
     country,
     user: Joi.object({
         email: email.required(),
-        password: password.required()
+        password: password.required(),
+        role: Joi.string().min(3)
     })
 });
 const idCustomerValidationSchema=Joi.object({
