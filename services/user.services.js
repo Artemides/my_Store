@@ -2,6 +2,8 @@ const {faker}=require("@faker-js/faker");
 const boom=require("@hapi/boom");
 const {models}= require('../libs/sequelize');
 const {hash}=require('bcrypt')
+const jwt=require('jsonwebtoken');
+const bcrypt=require('bcrypt');
 class userService{
   constructor(){
     this.users=[];
@@ -45,6 +47,11 @@ class userService{
         delete result.dataValues.password;
         resolve(result);
     })
+  }
+  async update(id,changes){
+    const user=await models.User.findByPk(id);
+    const response=await user.update(changes);
+    return response;
   }
   patch(id,data){
     return new Promise((resolve,reject)=>{

@@ -26,8 +26,11 @@ const createCustomerSchema=Joi.object({
 const idCustomerValidationSchema=Joi.object({
     id:id.required(),
 });
-
+const emailCustomerValidation=Joi.object({
+    email: email.required()
+})
 module.exports={
     createCustomerSchema,
-    idCustomerValidationSchema
+    idCustomerValidationSchema,
+    emailCustomerValidation
 }
