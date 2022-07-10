@@ -4,7 +4,7 @@ const id = Joi.string().uuid();
 const email = Joi.string().email();
 const password =Joi.string().min(8);
 const role =Joi.string().min(3);
-const token=Joi.string().token();
+const token=Joi.string();
 const createUserSchema = Joi.object({
   email:email.required(),
   password:password.required(),
