@@ -19,8 +19,6 @@ const addProductToOrderSchema=Joi.object({
     productId:productId.required(),
     amount:amount.required()
 })
-
-
 module.exports={
     createOrderSchema,
     idValidationSchema,

@@ -3,10 +3,13 @@ const router=express.Router();
 const CustomerService=require('../services/customer.services');
 const {validatorHandle} =require('../middlewares/validator.handle');
 const {createCustomerSchema,idCustomerValidationSchema}=require('../schemas/customer.schema');
-
+const passport=require('passport');
+const { checkRole } = require('../middlewares/auth.handler');
 
 const service= new CustomerService();
 router.get('/',
+    passport.authenticate('jwt',{session:false}),
+    checkRole('admin','customer'),
     async (req,res,next)=>{
         await service.findAll()
                 .then(result=>{

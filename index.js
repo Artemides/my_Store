@@ -20,6 +20,7 @@ const options={
 
 app.use(express.json());
 app.use(cors(options));
+require('./utils/auth');
 routerApp(app);
 app.use(logError);
 app.use(boomErrorHandler);
