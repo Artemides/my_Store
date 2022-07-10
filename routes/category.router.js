@@ -3,9 +3,11 @@ const router = express.Router();
 const { CategoryService } = require('../services/category.services');
 const {validatorHandle}=require('../middlewares/validator.handle');
 const {createCategorySchema,idCategoryValidation}=require('../schemas/category.schema')
+const {checkAdminRole}=require('../middlewares/auth.handler');
 const service = new CategoryService();
-
-router.get('/', async (req, res, next) => {
+const passport=require('passport');
+router.get('/', 
+  async (req, res, next) => {
   try {
     const result = await service.findAll();
     res.status(200).json(result);
@@ -14,7 +16,9 @@ router.get('/', async (req, res, next) => {
   }
 });
 
-router.post('/', 
+router.post('/',
+  passport.authenticate('jwt',{session:false}),
+  checkAdminRole,
   validatorHandle(createCategorySchema,'body'), 
   async (req, res, next) => {
   try {

@@ -1,16 +1,13 @@
 const {faker}=require("@faker-js/faker");
 const boom=require("@hapi/boom");
-
-const pool=require('../libs/postgres.pool');
-
 const {models}= require('../libs/sequelize');
-
-
+const {hash}=require('bcrypt')
+const jwt=require('jsonwebtoken');
+const bcrypt=require('bcrypt');
 class userService{
   constructor(){
     this.users=[];
     this.generateUsers();
-    this.pool=pool.on('error',(err)=> console.error(err));
   }
   generateUsers(){
     for (let index = 0; index < 10; index++) {
@@ -28,17 +25,33 @@ class userService{
   }
   find(){
     return new Promise( async (resolve,reject)=>{
-      const result=models.User.findAll({
+      const result=await models.User.findAll({
         include:['user_customer']
       });
       resolve(result);
     })
   }
+  async findByEmail(email){
+     const user=await models.User.findOne({
+      where:{email}
+     });
+     return user;
+  }
   create(data){
     return new Promise(async (resolve,reject)=>{
-        const result= await models.User.create(data).catch(err=>reject(err)); 
+        
+        const result= await models.User.create({
+          ...data,
+          password: await hash(data.password,10)
+        }).catch(err=>reject(err)); 
+        delete result.dataValues.password;
         resolve(result);
     })
+  }
+  async update(id,changes){
+    const user=await models.User.findByPk(id);
+    const response=await user.update(changes);
+    return response;
   }
   patch(id,data){
     return new Promise((resolve,reject)=>{
