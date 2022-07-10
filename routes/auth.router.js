@@ -6,6 +6,7 @@ const AuthService=require('../services/auth.services');
 const MailService=require('../services/mail.services');
 const {validatorHandle} =require('../middlewares/validator.handle');
 const {emailCustomerValidation}=require('../schemas/customer.schema');
+const {resetPasswordSchema}=require('../schemas/user.schema');
 const service=new AuthService();
 const mailService=new MailService();
 router.post('/login',
@@ -28,7 +29,9 @@ router.post('/recover',
         next(error);
     }
 })
-router.post('/change-password',async (req,res,next)=>{
+router.post('/change-password',
+    validatorHandle(resetPasswordSchema,'body'),
+    async (req,res,next)=>{
     try {
         const {token,newPassword}=req.body;
         const response=await service.changePassword(token,newPassword);

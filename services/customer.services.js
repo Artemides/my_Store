@@ -15,7 +15,7 @@ class CustomerService {
            },{  
             include:['user']
            }).catch(err=>reject(err));
-           delete result.dataValues.user.password;
+           delete result.dataValues.user.dataValues.password;
            resolve(result);
         })
     }
